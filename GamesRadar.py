@@ -1,2 +1,2 @@
-msg = "Hello World"
-print(msg)
+import src.GUI
+src.GUI.initialize()
