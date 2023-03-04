@@ -1,14 +1,7 @@
 import PySimpleGUI as sg
+import src.GoogleKeepIntegration as gkeep
 
-# fonts = (
-#     ('Courier New', 8, 'italic'),
-#     ('Courier New', 20, 'italic'),
-#     ('Courier New', 40, 'italic'),
-#     ('Courier New', 60, 'italic'),
-#     None,
-# )
-
-def initialize():
+def initialize(appName):
     titleFontSize = 45
     labelFontSize = 25
     buttonFontSize = 20
@@ -21,14 +14,20 @@ def initialize():
         ], 
         [sg.Button("Add to Radar", font=(buttonFontSize), pad=((258,0),(0,5)))]
     ]
-    window = sg.Window("Demo", layout)
+    window = sg.Window(appName, layout)
 
     while True:
         event, values = window.read()
         # End program if user closes window or
         # presses the OK button
         if event == "Add to Radar":
-            break
+            print("You entered:", values[0])
+            # Read google keep and return Array of games
+            gameList = gkeep.getVideoGameListFromKeep()
+            print("gameList:", gameList)
+            # Check Array for given value
+            # Add entry if game not found within array
+            # Notify user entry already exists if game is within array
         if event == sg.WIN_CLOSED:
             break
 
