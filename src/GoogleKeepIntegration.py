@@ -1,18 +1,34 @@
 import gkeepapi
+import constants
 
 keep = gkeepapi.Keep()
-# Change to ENV vars
-keep.login('user', 'pass')
-
-# note = keep.createNote('Todo', 'Eat breakfast')
-# note.pinned = True
-# note.color = gkeepapi.node.ColorValue.Red
-# keep.sync()
+keep.login(constants.GKEEP_USERNAME,constants.GKEEP_PASSWORD)
 
 def getVideoGameListFromKeep():
-    gnote = keep.get("1jATWmDP71v1C8-EjOAA5rFkXyxzeDnWIGz40EDa94IrLGvuVqKW8eleVGMErACbR")
-    # print("gnote Title:", gnote.title)
-    # print("gnote Text:", gnote.text)
+    gnote = keep.get(constants.GKEEP_NOTEID)
     gameList = gnote.text.splitlines()
-    # print("gameList:", gameList)
     return gameList
+
+def formatGameEntry(game, releaseDate):
+    if "" in releaseDate:
+        releaseDate = "TBD"
+    # print("releaseDate:", releaseDate)
+    return "☐ "+game+" - "+releaseDate
+
+def formatGameFromList(game):
+    secondIndex = game.index('-')-1
+    return game[2:secondIndex]
+
+def checkListForEntryAndAppend(entry, gameList, GUIPopUp):
+    appendGame = True
+    for gameValue in gameList:
+        game = formatGameFromList(gameValue)
+        if entry in game:
+            # Notify user entry already exists if game is within array
+            appendGame = False
+            GUIPopUp()
+    newGameList = gameList
+    if appendGame == True:
+        print('Adding',entry,'to game list')
+        newGameList.append(formatGameEntry(entry, ""))
+    return newGameList

@@ -1,3 +1,4 @@
+import string
 import PySimpleGUI as sg
 import src.GoogleKeepIntegration as gkeep
 
@@ -16,18 +17,23 @@ def initialize(appName):
     ]
     window = sg.Window(appName, layout)
 
+    def GUIPopUp():
+        print('Entry already exists in game')
+        sg.popup_auto_close('Entry already exists in Game Radar', auto_close_duration=(10))
+
     while True:
         event, values = window.read()
-        # End program if user closes window or
-        # presses the OK button
+        # User presses the button
         if event == "Add to Radar":
-            print("You entered:", values[0])
+            userInput = string.capwords(values[0])
+            print("You entered:", userInput)
             # Read google keep and return Array of games
-            gameList = gkeep.getVideoGameListFromKeep()
+            gkeepGameList = gkeep.getVideoGameListFromKeep()
+            # print("gkeepGameList:", gkeepGameList)
+            # Check Array for given value and add entry if game not found within array
+            gameList = gkeep.checkListForEntryAndAppend(userInput, gkeepGameList, GUIPopUp)
             print("gameList:", gameList)
-            # Check Array for given value
-            # Add entry if game not found within array
-            # Notify user entry already exists if game is within array
+        # End program if user closes window
         if event == sg.WIN_CLOSED:
             break
 
