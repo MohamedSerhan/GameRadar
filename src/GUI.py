@@ -60,13 +60,12 @@ def initialize(appName):
             print("You entered:", userInput)
             # Read google keep and return Array of games
             gkeepGameList = gkeep.getVideoGameListFromKeep()
-            # print("gkeepGameList:", gkeepGameList)
             # Check Array for given value and add entry if game not found within array
             gameList = gkeep.checkListForEntryAndAppend(userInput, gkeepGameList, GUIPopUp)
             # Re-sort game list based on release date (already released at top while TBD at bottom)
             modifiedGameList= sortGameList(gameList)
-            print(modifiedGameList)
             # Write Game List to GKeep
+            gkeep.writeGameListToKeep(modifiedGameList)
         # End program if user closes window
         if event == sg.WIN_CLOSED:
             break
