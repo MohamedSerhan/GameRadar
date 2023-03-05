@@ -21,6 +21,37 @@ def initialize(appName):
         print('Entry already exists in game')
         sg.popup_auto_close('Entry already exists in Game Radar', auto_close_duration=(10))
 
+    def has_numbers(inputString):
+        return any(char.isdigit() for char in inputString)
+            
+    def sortGameList(gameList):
+        gameListTop = []
+        gameListMid = []
+        gameListBot = []
+        for game in gameList:
+            gameDate = game.split("-")[1]
+            if "Out" in gameDate:
+                gameListTop.append(game)
+            elif has_numbers(gameDate):
+                gameListMid.append(game)
+            else:
+                gameListBot.append(game)
+        gameListMid1 = []
+        gamelistMid2 = []
+        for game in gameListMid:
+            date = game.split("-")[1]
+            if len(date.split(" ")) > 2:
+                gameListMid1.append(game)
+            else:
+                gamelistMid2.append(game)
+        gameListMid1.sort(key=lambda x: x.split("-")[1].split(" ")[1])
+        gamelistMid2.sort(key=lambda x: x.split("-")[1])
+        gameListMid = gameListMid1 + gamelistMid2
+        gameListTop.sort()
+        gameListBot.sort()
+        modifiedGameList = gameListTop + gameListMid + gameListBot
+        return modifiedGameList
+
     while True:
         event, values = window.read()
         # User presses the button
@@ -32,7 +63,10 @@ def initialize(appName):
             # print("gkeepGameList:", gkeepGameList)
             # Check Array for given value and add entry if game not found within array
             gameList = gkeep.checkListForEntryAndAppend(userInput, gkeepGameList, GUIPopUp)
-            print("gameList:", gameList)
+            # Re-sort game list based on release date (already released at top while TBD at bottom)
+            modifiedGameList= sortGameList(gameList)
+            print(modifiedGameList)
+            # Write Game List to GKeep
         # End program if user closes window
         if event == sg.WIN_CLOSED:
             break
