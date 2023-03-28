@@ -1,2 +1,3 @@
-import src.GUI
-src.GUI.initialize("Game Radar")
+from src.GUI import initialize
+
+initialize("Game Radar")

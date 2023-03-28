@@ -1,7 +1,7 @@
 import requests
 import constants
 
-def authenticateTwitch():
+def authenticate_twitch():
     url = "https://id.twitch.tv/oauth2/token"
     queryParams = {
         'client_id': constants.TWITCH_CLIENTID,
@@ -11,20 +11,20 @@ def authenticateTwitch():
     req = requests.post(url, params=queryParams)
     return req.json()["access_token"]
 
-def getReleaseDateID(game, headers):
+def get_release_date_id(game, headers):
     url = "https://api.igdb.com/v4/games"
     body = 'search "' + game + '"; fields name,release_dates;'
     req = requests.post(url, headers=headers, data=body)
     return req.json()[0]["release_dates"][-1]
 
-def getReleaseDate(game):
+def get_release_date(game):
     url = "https://api.igdb.com/v4/release_dates"
-    twitchToken = authenticateTwitch()
+    twitchToken = authenticate_twitch()
     headers = {
         'Client-ID': constants.TWITCH_CLIENTID,
         'Authorization': "Bearer " + twitchToken
     }
-    releaseDateID = getReleaseDateID(game, headers)
+    releaseDateID = get_release_date_id(game, headers)
     body = 'fields *; where id = '+ str(releaseDateID) + ';'
     req = requests.post(url, headers=headers, data=body)
     return req.json()[0]["human"]
